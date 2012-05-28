@@ -1,41 +1,40 @@
 - content_for :head do
-  %title Mongoid: Installation
+  %title Mongoid: Установка
 
-%h1 Getting Started
+%h1 Начало работы
 
 .page-nav
   .container
     %ul.nav.nav-pills
-      %li= link_to "Prerequisites", "#prerequisites"
-      %li= link_to "Installation", "#installation"
-      %li= link_to "Configuration", "#configuration"
-      %li= link_to "Logging", "#logging"
-      %li= link_to "Replica Sets", "#replica"
-      %li= link_to "Sharding", "#sharding"
+      %li= link_to "Подготовка", "#prerequisites"
+      %li= link_to "Установка", "#installation"
+      %li= link_to "Настройка", "#configuration"
+      %li= link_to "Логирование", "#logging"
+      %li= link_to "Наборы реплик", "#replica"
+      %li= link_to "Шардинг", "#sharding"
 
 %section#prerequisites
-  %h2 Prerequisites
+  %h2 Подготовка
 
   %p
-    There are a few things you need to have in your toolbox before tackling
-    a web application using Mongoid.
+    Перед тем, как приняться за разработку веб-приложения с использованием
+    Mongoid, убедитесь, что у вас в наличии:
 
     %ul
-      %li A good to advanced knowledge of Ruby.
-      %li Have good knowledge of your web framework if using one.
-      %li A thorough understanding of MongoDB.
+      %li Хорошее знание Ruby.
+      %li Если вы используете какой-либо веб-фреймворк, то запаситесь хорошими знаниями и о нём тоже.
+      %li Полное понимание MongoDB.
 
   %p
-    This may seem like a "thank you Captain Obvious" moment, however if you
-    believe that you can just hop over to Mongoid because you read a blog
-    post on how cool Ruby and MongoDB were, you are in for a
-    <i>world of pain</i>.
+    Тут вы наверняка воскликните: «Спасибо, Капитан Очевидность!», но если вы решили, что
+    легко осилите Mongoid только потому, что прочитали в каком-то блоге, что Rails и
+    MongoDB — это круто, то <i>добро пожаловать в ад</i>.
 
   %p
-    Mongoid leverages many aspects of the Ruby programming
-    language that are not for beginner use, and sending the core
-    team into a frenzy tracking down a bug for a common Ruby mistake is a
-    waste of our time, and all of the other users of the framework as well.
+    Mongoid основан на множестве непростых аспектов языка Ruby, которые
+    не известны новичкам, и вы только разозлите разработчиков Mongoid, отправляя
+    баг-репорт, содержащий распространенные ошибки начинающих, напрасно потратите
+    наше время и время других пользователей.
 
   .well
     %table
@@ -43,40 +42,41 @@
         %td.samurai= image_tag "/images/samurai.png"
         %td.note
           %p
-            <i>THE DATABASE IS NOT A BLACK BOX</i>.
-          Mongoid is an abstraction to make application developers'
-          lives easier, however the internals leverage the
-          power of MongoDB and it is truly important to know what is going on
-          under the covers. This is why the documentation provides the exact
-          queries that Mongoid is executing against the database when you call a
-          persistence operation. If we took the time to tell you, you should listen. :)
+            <i>БАЗА ДАННЫХ — ЭТО НЕ ЧЁРНЫЙ ЯЩИК.</i>.
+          Mongoid предоставляет уровень абстракции, который облегчает
+          жизнь разработчикам, однако внутри — вся мощь MongoDB, и очень
+          важно понимать, что там внутри на самом деле происходит. Для этого
+          в документации для всех операций персистентности полностью приводятся
+          выполняемые запросы к базе данных. Раз уж мы решили вам о чём-то
+          рассказать, значит, неплохо бы послушать. :)
 
 %section#installation
-  %h2 Installation
+  %h2 Установка
 
   %p
-    The preferred method for installing Mongoid is with bundler. Simply add
-    Mongoid to your <code>Gemfile</code>.
+    Рекомендуемый способ установки Mongoid — bundler. Нужно просто добавить
+    Mongoid в <code>Gemfile</code> проекта.
 
   :coderay
     #!ruby
     gem "mongoid", "~> 3.0.0.rc"
 
   %p
-    Alternatively you can get the Mongoid gem direcly from rubygems.org:
+    Также вы можете установить гем напрямую с rubygems.org:
 
   :coderay
     #!ruby
     $ gem install mongoid
 
 %section#configuration
-  %h2 Configuration
+  %h2 Настройка
 
   %p
-    Mongoid configuration can be done through a <code>mongoid.yml</code> that
-    specifies your options and database sessions. The simplest configuration
-    is as follows, which sets the default session to "localhost:27017"
-    and provides a single database in that session named "mongoid".
+    Настройка Mongoid выполняется с помощию файла конфигурации
+    <code>mongoid.yml</code>, в котором указываются сессии подключения к
+    базе данных. Ниже приведена простейшая конфигурация, в которой сессия
+    по умолчанию настоена на адрес «localhost:27017», и эта сессия предоставляет
+    одну базу данных, которая называется «mongoid».
 
   :coderay
     #!yaml
@@ -86,76 +86,80 @@
           database: mongoid
           hosts: localhost:27017
 
-  %h3 Rails Applications
+  %h3 Rails-приложение
 
   %p
-    You can generate a config file by executing the generator and then editing
-    <code>myapp/config/mongoid.yml</code> to your heart's desire. Mongoid will
-    then handle everything else from there.
+    Вы можете создать файл конфигурации вызвав соответствующий генератор и
+    отредактировав затем файл <code>myapp/config/mongoid.yml</code> так, как
+    душе угодно. Mongoid будет использовать настройки из этого файла автоматически.
 
   :coderay
     #!text
     $ rails g mongoid:config
 
-  %h3 Anatomy of a Mongoid Config
+  %h3 Внутри файла конфигурации Mongoid
 
   %p
-    Let's have a look at a full-blown <code>mongoid.yml</code> and explain
-    the full power of what Mongoid can do. The following configuration has its
-    explanation in the comments above each key.
+    Чтобы разобраться во всех возможностсях Mongoid давайте-ка посмотрим 
+    на пример файла конфигурации <code>mongoid.yml</code>
+    со всеми возможными настройками и пояснениями к ним.
 
   :coderay
     #!yaml
-    # Tell Mongoid which environment this configuration is for.
+    # Указывает Mongoid, для какой среды предназначена конфигурация.
     production:
-      # This starts the session configuration settings. You may have as
-      # many sessions as you like, but you must have at least 1 named
-      # 'default'.
+      # Начало секции настройки сессии. Сессии можно называть как угодно,
+      # и создавать их сколько угодно, но как минимум одна сессия должна
+      # быть обязательно, и называться она должна 'default'.
       sessions:
-        # Define the default session.
+        # Сессия по умолчанию.
         default:
-          # A session can have any number of hosts. Usually 1 for a single
-          # server setup, and at least 3 for a replica set. Hosts must be
-          # an array of host:port pairs. This session is single server.
+          # Сессия может содержать любое количество хостов. Обычно, он один
+          # в случае установки приложения на одном сервере, и как минимум
+          # три для набора реплик. Хост должен быть представлен массивом
+          # пар хост:порт. Это сессия для одного сервера.
           hosts:
             - flame.mongohq.com:27017
-          # Define the default database name.
+          # Указывает имя базы данных по умолчанию.
           database: mongoid
-          # Since this database points at a session connected to MongoHQ, we must
-          # provide the authentication details.
+          # Так как эта база данных соответствует сессии, которая подключается
+          # к MongoHQ, нам необходимо указать настройки аутентификации.
           username: user
           password: password
-        # This defines a secondary session at a replica set.
+        # Это вторая сессия с набором реплик.
         replica_set:
-          # This configuration is a 3 node replica set.
+          # Это набор реплик, состоящий из 3 нод.
           hosts:
             - dedicated1.myapp.com:27017
             - dedicated2.myapp.com:27017
             - dedicated3.myapp.com:27017
           database: mongoid
-          # We can set session specific options, like reads executing
-          # on secondary nodes, and defaulting the session to safe mode.
+          # Мы можем установить для сессии собственные настройки, например,
+          # выполнение операций чтения на дополнительных нодах и использование
+          # безопасного режима по умолчанию.
           options:
             consistency: :eventual
             safe: true
-        # This defines a tertiary session at a Mongos fronted shard.
+        # Это настройки третьей сессии в фронтэндовом шарде Mongos.
         shard:
-          # This configuration is a Mongos shard server.
+          # Настройки шардового сервера Mongos.
           hosts:
             - mongos.myapp.com:27017
           database: mongoid
-        # This configuration shows an authenticated replica set via a uri.
+        # Настройка набора реплик с аутентификацией через URI.
         another:
           uri: mongodb://user:pass@59.1.22.1:27017,59.1.22.2:27017/mongoid
-      # Here we put the Mongoid specific configuration options. These are explained
-      # in more detail next.
+      # Тут указаны настройки Mongoid, которые будут рассмотрены более детально
+      # позднее.
       options:
         allow_dynamic_fields: false
         identity_map_enabled: true
         include_root_in_json: true
         include_type_for_serialization: true
-        # Note this can also be true if you want to preload everything, but this is
-        # almost never necessary. Most of the time set this to false.
+        # Обратите внимание, что эту опцию можно также установить в значение true,
+        # если вы хотите, чтобы предварительно загружались все модели, однако,
+        # необходимости в этом почти никогда нет. Для большинства случаев подойдет
+        # значение false.
         preload_models:
           - Canvas
           - Browser
@@ -166,85 +170,87 @@
         use_activesupport_time_zone: false
         use_utc: true
 
-  %h3 Configuration options
+  %h3 Опции конфигурации
 
   %p
-    Mongoid currently supports the following configuration options, either
-    provided in the mongoid.yml or programatically (defaults in
-    parenthesis).
+    На данный момент Mongoid поддерживает следующие опции конфигурации,
+    которые можно как указать в файле mongoid.yml, так и задать программно.
+    Значения по умолчанию указаны в скобках.
 
 
   %ul.config
     %li
-      <code>allow_dynamic_fields</code>(true): When attributes are not defined
-      as fields but added to an object, they will get fields added for them
-      dynamically and will get persisted. If set to false an error will get
-      raised when attempting to set a value that has no field defined.
+      <code>allow_dynamic_fields</code>(true): Если к объекту добавляются
+      атрибуты, которые не объявлены как поля модели, то поля генерируются
+      для них автоматически и сохраняются в базе данных. Если опция
+      установлена в false, то присвоение значения необъявленному полю
+      вызовет ошибку.
     %li
-      <code>identity_map_enabled</code>(false): When set to true Mongoid will store
-      documents loaded from the database in the identity map by their ids, so
-      subsequent database queries for the same document in the same unit of
-      work do not hit the database. This is only for relation queries at the
-      moment. See the identity map documentation for more info.
+      <code>identity_map_enabled</code>(false): Если опция установлена в true,
+      то Mongoid будет сохранять загружаемые из базы объекты в карте соответствия
+      (identity map) по их идентификаторам, благодаря чему последовательные запросы
+      одного объекта в одном модуле работы (unit of work) не будут нагружать базу
+      данных. На данный момент поддерживаются только запросы относительно связанных
+      объектов. Дополнительная информация в разделе Identity Map.
     %li
-      <code>include_root_in_json</code>(false): When set to true mongoid will
-      include the name of the root document and the name of each association
-      as the root element when calling <code>#to_json</code> on a model.
+      <code>include_root_in_json</code>(false): Если опция установлена в true,
+      mongoid будет добавлять название корневого документа и название каждой
+      ассоциации как корневого элемента при вызове метода <code>#to_json</code>
+      модели.
     %li
-      <code>include_type_for_serialization</code>(false): When set to true this will
-      tell Mongoid to include the "_type" field when serializing to JSON and XML.
+      <code>include_type_for_serialization</code>(false): Если опция установлена в
+      true, то Mongoid будет добавлять поле '_type' при сериализации в JSON и XML.
     %li
-      <code>preload_models</code>(false): Tells Mongoid to preload application
-      model classes on each request in environments where classes are not
-      being cached. Specify an array of class names when enabling, only to the
-      classes that use inheritance.
+      <code>preload_models</code>(false): Для тех сред, где не включено кэширование
+      классов, Mongoid будет выполнять предварительную заргузку классов моделей
+      для каждого запроса. При включении этой опции в качестве значения указывайте
+      массив имён классов, которые используют наследование.
     %li
-      <code>protect_sensitive_fields</code>(true): Mongoid by default will auto
-      protect '_id' and '_type' from mass assignment. Set this to false if you
-      are daring with your application's security.
+      <code>protect_sensitive_fields</code>(true): По умолчанию Mongoid автоматически
+      защищает '_id' и '_type' от массового присвоения. Устанавливайте эту опцию в
+      false только если не боитесь за безопасность своего приложения.
     %li
-      <code>raise_not_found_error</code>(true): Will raise a
-      <code>Mongoid::Errors::DocumentNotFound</code> when attempting to find a
-      document by an id that doesnt exist. When set to false will only return
-      nil for the same query.
+      <code>raise_not_found_error</code>(true): Mongoid будет вызывать
+      <code>Mongoid::Errors::DocumentNotFound</code> при попытке выполнить
+      поиск документа по несуществующему идентификатору. Если опция установлена
+      в false, то такой запрос просто вернет nil.
     %li
-      <code>skip_version_check</code>(false): If you are having issues
-      authenticating against MongoHQ or MongoMachine because of access to the
-      system collection being not allowed, set this to true.
+      <code>skip_version_check</code>(false): Если у вас возникают проблемы
+      при аутентификации на MongoHQ или MongoMachine из-за отсутствия доступа
+      к системной коллекции, установите значение этой опции в true.
     %li
-      <code>scope_overwrite_exception</code>(false): This will instruct Mongoid
-      to raise an error if you define a scope with the same name as an existing
-      method.
+      <code>scope_overwrite_exception</code>(false): Mongoid будет вызывать
+      ошибку при попытке создать скоп (scope) с именем, которое совпадает с
+      названием существующего метода.
     %li
-      <code>use_activesupport_time_zone</code>(true): When in a Rails app will
-      tell Mongoid to convert all times in the application to the local defined
-      time zone in Active Support.
+      <code>use_activesupport_time_zone</code>(true): При использовании в
+      Rails-приложении Mongoid будет конвертировать любое время в локальную
+      временную зону из настроек Active Support.
     %li
-      <code>use_utc</code>(false): Instructs Mongoid to convert all times to
-      UTC times in all cases.
+      <code>use_utc</code>(false): Указывает Mongoid всегда конвертировать
+      любое время в UTC.
 
   %p
-    If you would like to see samples, there is one in the
+    Примеры конфигурации можно найти в
     <a href="https://github.com/mongoid/mongoid/blob/master/spec/config/mongoid.yml">
-    Mongoid repository</a> and one in the
+    репозитории Mongoid</a>, а также в
     <a href="https://github.com/mongoid/echo/blob/master/config/mongoid.yml">
-    Echo sample application</a>.
+    приложении-примере Echo</a>.
 
 
-  %h3 Getting Rid of Active Record
-
-  %p
-    Now that you have a <code>mongoid.yml</code> you can't wait to delete that
-    pesky <code>database.yml</code>, right? Do it and you'll start gecodeing
-    <code>ActiveRecord</code> errors all over the place.
-    You don't need ActiveRecord unless you're trying to use Mongo in concert
-    with a SQL database. Here's how you remove ActiveRecord from the most
-    recent version of Rails 3...
+  %h3 Избавляемся от Active Record
 
   %p
-    Open <code>myapp/config/application.rb</code> and near the top, remove
-    the line <code>require "rails/all"</code> and add the following lines
-    so you end up with this:
+    Теперь, когда у нас есть <code>mongoid.yml</code>, вам, наверное, не терпится
+    удалить ненужный <code>database.yml</code>, да? Но как только вы удалите его,
+    отовсюду повалятся ошибки <code>ActiveRecord</code>.
+    Если вы не собираетесь использовать Mongo вместе с какой-нибудь базой
+    данных SQL, то ActiveRecord вам больше не понадобится. Вот как удалить ActiveRecord
+    для последней версии Rails 3...
+
+  %p
+    Откройте <code>myapp/config/application.rb</code> и в самом верху сотрите
+    строчку <code>require "rails/all"</code> а затем добавьте следующее:
 
   :coderay
     #!ruby
@@ -252,13 +258,13 @@
     require "action_mailer/railtie"
     require "active_resource/railtie"
     require "rails/test_unit/railtie"
-    # require "sprockets/railtie" # Uncomment this line for Rails 3.1+
+    # require "sprockets/railtie" # Раскомментируйте эту строку, если используете Rails 3.1+
 
   %p
-    For Rails 3.2+ you'll also need to remove configuration options for
-    Active Record that reside in your environments, ie
-    <code>myapp/config/environments/development.rb</code>. Make sure the
-    lines are commented out like as follows.
+    Для Rails 3.2+ потребуется удалить настройки ActiveRecord 
+    из файла конфигурации среды, такого, как
+    <code>myapp/config/environments/development.rb</code>, например.
+    Закомментируйте строки как показано ниже.
 
   :coderay
     #!ruby
@@ -266,28 +272,29 @@
     # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   %p
-    You can also generate your new rails app sans Active Record like so.
+    Также Rails позволяет сгенерировать приложение, в котором ActiveRecord
+    отсутствует изначально.
 
   :coderay
     #!text
     rails new app_name --skip-active-record
 
-  %h3 Sinatra, Padrino, and others
+  %h3 Sinatra, Padrino и прочие
 
   %p
-    You can create your <code>mongoid.yml</code> and place it anywhere you like.
-    Just be sure that on application initialization you do the following:
+    Создайте <code>mongoid.yml</code> в любом месте на ваше усмотрение.
+    А во время инициализации приложения не забудьте вызвать:
 
   :coderay
     #!ruby
     Mongoid.load!("path/to/your/mongoid.yml")
 
 %section#logging
-  %h2 Logging
+  %h2 Логирование
 
   %p
-    Changing logging options is done simply by telling Mongoid or Moped's
-    logger to have a different level.
+    Настройки логирования управляются простым изменением уровня логгера для
+    Mongoid или Moped.
 
   :coderay
     #!ruby
@@ -299,15 +306,16 @@
     end
 
 %section#replica
-  %h2 Replica Sets
+  %h2 Наборы реплик
 
   %p
-    For replica sets, you only need to put each member of the replica set
-    under the <code>hosts</code> section in your <code>mongoid.yml</code> -
-    Mongoid and Moped will take care of the rest. The default consistency is
-    <code>:eventual</code>, which means that reads will attempt to go to
-    secondaries. If you don't want this, switch this option to
-    <code>:strong</code>, which will send everything to the master node.
+    Чтобы создать набор реплик (replica set), необходимо поместить каждый
+    член набора в секцию <code>hosts</code> файла <code>mongoid.yml</code>
+    и Mongoid с Moped сделают всё остальное. Уровень связности по умолчанию
+    <code>:eventual</code>, это значит, что операции чтения будут направлены
+    к дополнительным узлам. Если это вас не устраивает, измените значение
+    опции на <code>:strong</code>, и все операции будут направляться
+    главному узлу.
 
   :coderay
     #!yaml
@@ -322,12 +330,12 @@
           consistency: :strong
 
 %section#sharding
-  %h2 Sharding
+  %h2 Шардинг
 
   %p
-    If you are using Mongoid in a sharded MongoDB environment and want to tell
-    Mongoid to include the shard keys in it's updates, specify this at the
-    model class level.
+    Если вы используете Mongoid в шарде и хотите настроить его так, чтобы он
+    добавлял ключи шард при изменениях, то это необходимо указать на
+    уровне класса модели.
 
   :coderay
     #!ruby
@@ -341,8 +349,8 @@
     end
 
   %p
-    In your <code>mongoid.yml</code>, just ensure that you are pointed at the
-    <code>mongos</code> server in your hosts.
+    Убедитесь, что настройки хостов в файле <code>mongoid.yml</code>
+    указывают на сервер <code>mongos</code>.
 
   :coderay
     #!yaml
