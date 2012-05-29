@@ -1,31 +1,33 @@
 - content_for :head do
-  %title Mongoid: Extras
+  %title Mongoid: Разное
 
-%h1 Extras
+%h1 Разное
 
 %p
-  Mongoid has some useful extra features that can be used in applications.
+  В Mongoid также есть несколько дополнительных функций, которые могут быть
+  полезны при разработке приложений.
 
 .page-nav
   .container
     %ul.nav.nav-pills
-      %li= link_to "Caching", "#caching"
-      %li= link_to "Paranoia", "#paranoia"
-      %li= link_to "Versioning", "#versioning"
-      %li= link_to "Timestamping", "#timestamps"
+      %li= link_to "Кэширование", "#caching"
+      %li= link_to "Paranoid Documents", "#paranoia"
+      %li= link_to "Версионирование", "#versioning"
+      %li= link_to "Метки времени", "#timestamps"
 
 %section#caching
-  %h2 Caching
+  %h2 Кэширование
 
   %p
-    Out of the box, Mongoid wraps the MongoDB Ruby Driver's cursor in order
-    to be memory efficient for large queries and data sets. However if you
-    want the query to load all matching documents in memory and return
-    them on <i>n</i> iterations without hitting the database again you
-    may cache a class or criteria:
+    По умолчанию, Mongoid использует обёртку курсора Ruby-драйвера MongoDB
+    для эффективного использования памяти при выполнении больших запросов
+    и обработке больших наборов данных. Однако, если вы хотите загрузить
+    все документы, соответствующие запросу, в память и возвращать их
+    на протяжении <i>n</i> итераций без выполнения запросов к базе данных,
+    существует возможность кэширования класса или критерия.
 
   %p
-    To have all queries for a model "cache":
+    Чтобы «кэшировать» все запросы для модели:
 
   :coderay
     #!ruby
@@ -35,7 +37,7 @@
     end
 
   %p
-    To cache on a per-query basis:
+    Для кэширования отдельного запроса:
 
   :coderay
     #!ruby
@@ -45,9 +47,9 @@
   %h2 Paranoid Documents
 
   %p
-    There may be times when you don't want documents to actually get deleted
-    from the database, but "flagged" as deleted. Mongoid provides a Paranoia
-    module to give you just that.
+    Существуют ситуации, когда вам захочется сделать так, чтобы документы при
+    удалении в действительности не удалялись из базы данных, а просто «помечались»
+    как удалённые. Для реализации такого поведения в Mongoid есть модуль Paranoia.
 
   :coderay
     #!ruby
@@ -56,29 +58,29 @@
       include Mongoid::Paranoia
     end
 
-    person.delete # Sets the deleted_at field to the current time.
-    person.delete! # Permanently deletes the document.
-    person.destroy! # Permanently delete the document with callbacks.
-    person.restore # Brings the "deleted" document back to life.
+    person.delete # Устанавливает значение поля deleted_at в текущее время.
+    person.delete! # Полностью удаляет документ из базы данных.
+    person.destroy! # Полностью удаляет документ с вызовом колбэков.
+    person.restore # Восстанавливает «удалённый» документ.
 
   %p
-    The documents that have been "flagged" as deleted (soft deleted)
-    can be accessed at any time by calling the <code>deleted</code>
-    class method on the class.
+    К документам, «помеченным» как удалённые (удалённым не по-настоящему),
+    в любой момент можно получить доступ вызвав собственный метод
+    <code>deleted</code> класса.
 
   :coderay
     #!ruby
-    Person.deleted # Returns documents that have been "flagged" as deleted.
+    Person.deleted # Возвращает набор документов, помеченных как удалённые.
 
 %section#versioning
-  %h2 Versioning
+  %h2 Версионирование
 
   %p
-    Mongoid supports simple versioning through inclusion of the
-    <code>Mongoid::Versioning</code> module. Including this module will create a
-    versions embedded relation on the document that it will append to on
-    each save. It will also update the version number on the document,
-    which is an integer.
+    Mongoid поддерживает простое версионирование, которое реализовано в
+    модуле <code>Mongoid::Versioning</code>. Включив этот модуль в
+    класс, вы получите в документе вложенную связь versions, которая будет пополняться
+    при каждом сохранении документа. Также будет обновляться номер версии
+    документа, который представлен целым числом.
 
   :coderay
     #!ruby
@@ -88,8 +90,8 @@
     end
 
   %p
-    You can also set a <code>max_versions</code> setting, and Mongoid will only
-    keep the max most recent versions.
+    Также вы можете установить максимальное количество последних версий, которое
+    будет хранить Mongoid, указав параметр <code>max_versions</code>.
 
   :coderay
     #!ruby
@@ -97,13 +99,14 @@
       include Mongoid::Document
       include Mongoid::Versioning
 
-      # keep at most 5 versions of a record
+      # хранить не больше 5 последних версий записи
       max_versions 5
     end
 
   %p
-    You may skip versioning at any point in time by wrapping the persistence
-    call in a <code>versionless</code> block.
+    Если при выполнении операции персистентности версионирование не требуется,
+    то его можно отключить для данной операции, обернув вызов в блок
+    <code>versionless</code>.
 
   :coderay
     #!ruby
@@ -112,12 +115,12 @@
     end
 
 %section#timestamps
-  %h2 Timestamping
+  %h2 Метки времени
 
   %p
-    Mongoid supplies a timestamping module in <code>Mongoid::Timestamps</code> which
-    can be included to get basic behavior for <code>created_at</code> and
-    <code>updated_at</code> fields.
+    В состав Mongoid входит модуль временных меток <code>Mongoid::Timestamps</code>,
+    который может быть включен в класс для получения базовых возможностей полей
+    <code>created_at</code> и <code>updated_at</code> (время создания и время обновления).
 
   :coderay
     #!ruby
@@ -127,8 +130,8 @@
     end
 
   %p
-    You may also choose to only have specific timestamps for creation or
-    modification.
+    Так же можно указать, какого именно типа метка требуется — времени
+    создания или модификации.
 
   :coderay
     #!ruby
@@ -143,8 +146,8 @@
     end
 
   %p
-    If you want to turn off timestamping for specific calls, use the timeless
-    method:
+    Если необходимо отключить запись временных меток для отдельного вызова,
+    можно использовать метод timeless:
 
   :coderay
     #!ruby
