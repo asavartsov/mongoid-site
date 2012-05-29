@@ -4,39 +4,40 @@
 %h1 Rails
 
 %p
-  Mongoid was built and targeted towards Rails applications, even though it
-  will work in any environment. However if you are using Rails consult the
-  next two sections on how Mongoid hooks into a Rails application.
+  Mongoid создан для и направлен на разработку Rails-приложений, хотя он
+  может работать и в любом другом окружении. И если вы работаете с Rails,
+  следующие разделы будут полезны для понимания работы Mongoid внутри
+  Rails-приложения.
 
 %p
-  For a sample Rails application and examples of domain modeling, please see
-  the Mongoid demo application,
-  <a href="http://github.com/mongoid/echo">Echo</a>. Note that currently the
-  application is only models and specs.
+  Если вы ищете образец Rails-приложения и примеры создания моделей,
+  обратите внимание на демонстрационное приложение
+  <a href="http://github.com/mongoid/echo">Echo</a> из Mongoid.
+  Обратите внимание, что это приложение содержит только модели и тесты.
 
 .page-nav
   .container
     %ul.nav.nav-pills
-      %li= link_to "Multi-Parameter Attributes", "#multi_param"
-      %li= link_to "Railties", "#railties"
-      %li= link_to "Rake Tasks", "#rake"
+      %li= link_to "Атрибуты с множественными параметрами", "#multi_param"
+      %li= link_to "Расширения Rails", "#railties"
+      %li= link_to "Задачи Rake", "#rake"
 
 %section#multi_param
-  %h2 Multi Parameter Attributes
+  %h2 Атрибуты с множественными параметрами
 
   %p
-    If you want to use multi-paramater attributes with Rails, you will
-    need to include an extra Mongoid module to support it.
+    Если вы хотите использовать атрибуты с множественными параметрами
+    в Rails, необходимо включить в класс дополнительный модуль Mongoid.
 
   .well
     %table
       %tr
         %td.samurai= image_tag "/images/samurai.png"
         %td.note
-          The reason for needing to include a module is due to the fact that
-          we believe this is not a very usable way of handling date/time
-          entry in forms, with a complex implementation.
-
+          Причина того, что для работы с ними необходимо включать 
+          отдельный модуль, заключается в том, что мы считаем, что 
+          такие атрибуты — это не самый удобный способ работы с полями
+          даты/времени в формах и его реализация довольно сложна.
 
   :coderay
     #!ruby
@@ -46,19 +47,20 @@
     end
 
 %section#railties
-  %h2 Railties
+  %h2 Расширения Rails
 
   %p
-    Mongoid provides some railties and initializers that one should be
-    aware of when writing a Rails application with Mongoid.
+    Mongoid предоставляет набор расширений Rails (railties) и
+    инициализаторов (initializers), которые стоит использовать
+    с большой осторожностью при написании Rails-приложений.
 
-  %h3 Configuration
+  %h3 Конфигурация
 
   %p
-    You can set Mongoid configuration options in your <tt>application.rb</tt>
-    along with other Rails environment specific options by accessing
-    <code>config.mongoid</code>. Options set here will override those set in
-    your <code>config/mongoid.yml</code>.
+    Вы можете задавать параметры конфигурации Mongoid в файле <tt>application.rb</tt>
+    также, как и другие настройки окружения приложения, параметры Mongoid начинаются c
+    <code>config.mongoid</code>. Те параметры, которые указываются здесь, имеют
+    более высокий приоритет, чем параметры в <code>config/mongoid.yml</code>.
 
   :coderay
     #!ruby
@@ -69,65 +71,68 @@
       end
     end
 
-  %h3 Model Preloading
+  %h3 Предварительная загрузка моделей
 
   %p
-    In order to properly set up single collection inheritance, Mongoid
-    needs to preload all models before every request in development mode.
-    This can get slow, so if you are not using any inheritance it is
-    recommended you turn this feature off.
+    Для правильного установления наследования внутри коллекции в режиме
+    разработки Mongoid необходимо загружать все модели перед каждым запросом.
+    Это может сильно сказаться на производительности приложения, поэтому
+    если вы не используете наследование моделей, этот параметер рекомендуется
+    выключить.
 
   :coderay
     #!ruby
     config.mongoid.preload_models = false
 
-  %h3 Exceptions
+  %h3 Исключения
 
   %p
-    Similar to Active Record, Mongoid tells raise to return specific http
-    codes when some errors are raised.
+    Также, как и Active Record, Mongoid даёт команду на передачу определённых
+    кодов ответа http при возникновении некоторых исключений.
 
     %ul
       %li <code>Mongoid::Errors::DocumentNotFound</code> : 404
       %li <code>Mongoid::Errors::Validations</code> : 422
 
-  %h3 Unicorn and Passenger
+  %h3 Unicorn и Passenger
 
   %p
-    When using Unicorn or Passenger, each time a child process is forked
-    when using app preloading or smart spawning, Mongoid will automatically
-    reconnect to the master database. If you are doing this in your
-    application manually you may remove your code.
+    Если вы работаете с Unicorn или Passenger, каждый раз при ответвлении
+    дочернего процесса при использовании предварительной загрузки приложения
+    или smart spawning, Mongoid автоматически переподключается к основной
+    базе данных. Если вы выполняете переподключение вручную в своём приложении,
+    то можете удалить этот код.
 
 %section#rake
-  %h2 Rake Tasks
+  %h2 Задачи Rake
 
   %p
-    Mongoid provides the following rake tasks when used in a Rails 3 environment:
+    При использовании в окружении Rails 3 Mongoid предоставляет следующий
+    набор задач для rake:
 
   %ul
     %li
-      <code>db:create</code>: Exists only for dependency purposes, does not actually
-      do anything.
+      <code>db:create</code>: Создана по зависимости. На самом деле,
+      ничего не делает.
     %li
-      <code>db:create_indexes</code>: Reads all index definitions from the models and
-      attempts to create them in the database.
+      <code>db:create_indexes</code>: Собирает все определения индексов
+      в моделях и пытается создать их в базе данных.
     %li
-      <code>db:remove_indexes</code>: Reads all index definitions from the models and
-      attempts to remove indexes that are not defined.
+      <code>db:remove_indexes</code>: Собирает все определения индексов
+      в моделях и пытается удалить их из базы данных.
     %li
-      <code>db:drop</code>: Drops all collections in the database with the exception of
-      the system collections.
+      <code>db:drop</code>: Уничтожает все коллекции в базе данных за
+      исключением системной коллекции.
     %li
-      <code>db:migrate</code>: Exists only for dependency purposes, does not actually
-      do anything.
+      <code>db:migrate</code>: Создана по зависимости. На самом деле,
+      ничего не делает.
     %li
-      <code>db:schema:load</code>: Exists only for framework dependency purposes, does
-      not actually do anything.
+      <code>db:schema:load</code>: Создана по зависимости фреймворка. На самом деле,
+      ничего не делает.
     %li
-      <code>db:seed</code>: Seeds the database from db/seeds.rb
+      <code>db:seed</code>: Заполняет базу данных из db/seeds.rb
     %li
-      <code>db:setup</code>: Creates indexes and seeds the database.
+      <code>db:setup</code>: Создаёт индексы и заполняет базу данных.
     %li
-      <code>db:test:prepare</code>: Exists only for framework dependency purposes, does
-      not actually do anything.
+      <code>db:test:prepare</code>: Создана по зависимости фреймворка. На самом деле,
+      ничего не делает.
